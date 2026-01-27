@@ -23,7 +23,6 @@ for (const el of flips) {
 }
 
 function pad2(n){ return String(n).padStart(2,"0"); }
-function pad3(n){ return String(n).padStart(3,"0"); }
 
 function setFlip(key, value) {
   const el = flips.find(x => x.dataset.key === key);
@@ -74,13 +73,14 @@ function update() {
     hintEl.textContent = "Ziel erreicht 🎉";
     wrap.classList.add("finished");
 
-    // Alles auf 00:00:00.000 setzen
-    ["hh1","hh2","mm1","mm2","ss1","ss2","ms1","ms2","ms3"].forEach(k => setFlip(k,"0"));
+    // Alles auf 00:00:00 setzen
+    ["hh1","hh2","mm1","mm2","ss1","ss2"].forEach(k => setFlip(k,"0"));
+
     return;
   }
 
-  const ms = diff % 1000;
   diff = Math.floor(diff / 1000);
+
 
   const sec = diff % 60;
   diff = Math.floor(diff / 60);
@@ -96,16 +96,14 @@ function update() {
   const HH = pad2(hrs);
   const MM = pad2(min);
   const SS = pad2(sec);
-  const MS = pad3(ms);
 
   // Ziffern einzeln flippen
   setFlip("hh1", HH[0]); setFlip("hh2", HH[1]);
   setFlip("mm1", MM[0]); setFlip("mm2", MM[1]);
   setFlip("ss1", SS[0]); setFlip("ss2", SS[1]);
-  setFlip("ms1", MS[0]); setFlip("ms2", MS[1]); setFlip("ms3", MS[2]);
 
   // Smooth (Millisekunden) — rAF statt setInterval
-  requestAnimationFrame(update);
+  setTimeout(update, 1000);
 }
 
 update();
