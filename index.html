@@ -1,58 +1,56 @@
 <!doctype html>
 <html lang="de">
-
 <head>
-    <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width,initial-scale=1" />
-    <title>Countdown</title>
-    <link rel="stylesheet" href="style.css" />
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Countdown</title>
+  <link rel="stylesheet" href="style.css" />
 </head>
-
 <body>
-    <main class="wrap" aria-live="polite">
-        <!-- Zeile 1: Tage -->
-        <section class="row row-days">
-            <div class="label">Days</div>
-            <div class="daysValue" id="daysValue">000</div>
-        </section>
+  <main class="wrap" aria-live="polite">
+    <!-- Zeile 1: Tage -->
+    <section class="row row-days">
+      <div class="label">Days</div>
+      <div class="daysValue" id="daysValue">000</div>
+    </section>
 
-        <!-- Zeile 2: Flip-Clock -->
-        <section class="row row-clock">
-            <div class="clock" role="group" aria-label="Countdown Uhrzeit">
-                <div class="unit">
-                    <div class="unitLabel">Hours</div>
-                    <div class="cards">
-                        <div class="flip" data-key="hh1"></div>
-                        <div class="flip" data-key="hh2"></div>
-                    </div>
-                </div>
+    <!-- Zeile 2: Flip-Clock -->
+    <section class="row row-clock">
+      <div class="clock" role="group" aria-label="Countdown Uhrzeit">
+        <div class="unit">
+          <div class="unitLabel">Hours</div>
+          <div class="cards">
+            <div class="flip" data-key="hh1"></div>
+            <div class="flip" data-key="hh2"></div>
+          </div>
+        </div>
 
-                <div class="sep">:</div>
+        <div class="sep">:</div>
 
-                <div class="unit">
-                    <div class="unitLabel">Minutes</div>
-                    <div class="cards">
-                        <div class="flip" data-key="mm1"></div>
-                        <div class="flip" data-key="mm2"></div>
-                    </div>
-                </div>
+        <div class="unit">
+          <div class="unitLabel">Minutes</div>
+          <div class="cards">
+            <div class="flip" data-key="mm1"></div>
+            <div class="flip" data-key="mm2"></div>
+          </div>
+        </div>
 
-                <div class="sep">:</div>
+        <div class="sep">:</div>
 
-                <div class="unit">
-                    <div class="unitLabel">Seconds</div>
-                    <div class="cards">
-                        <div class="flip" data-key="ss1"></div>
-                        <div class="flip" data-key="ss2"></div>
-                    </div>
-                </div>
-            </div>
-        </section>
+        <div class="unit">
+          <div class="unitLabel">Seconds</div>
+          <div class="cards">
+            <div class="flip" data-key="ss1"></div>
+            <div class="flip" data-key="ss2"></div>
+          </div>
+        </div>
 
-    <div class="hint" id="hint">Countdown bis 01.03.2026 (Europe/Berlin)</div>
+      </div>
+    </section>
+
+    <div class="hint" id="hint">Countdown until 01.03.2026 (Europe/Berlin)</div>
   </main>
 
-    <script src="script.js"></script>
+  <script src="script.js"></script>
 </body>
-
 </html>
