@@ -222,27 +222,3 @@ body{
   100%{ transform:scale(1); }
 }
 
-.qr{
-  margin-top: 22px;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 8px;
-}
-
-.qr img{
-  width: 180px;
-  height: 180px;
-  border-radius: 16px;
-  background: #fff;
-  padding: 10px;
-  box-shadow: 0 12px 32px rgba(0,0,0,.35);
-}
-
-.qr-label{
-  font-size: 13px;
-  color: var(--muted);
-  letter-spacing: .08em;
-  text-transform: uppercase;
-}
-
