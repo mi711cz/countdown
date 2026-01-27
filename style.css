@@ -223,7 +223,6 @@ body{
 }
 
 .qr{
-  discover: none;
   margin-top: 22px;
   display: flex;
   flex-direction: column;
@@ -232,8 +231,8 @@ body{
 }
 
 .qr img{
-  width: 100px;
-  height: 100px;
+  width: 180px;
+  height: 180px;
   border-radius: 16px;
   background: #fff;
   padding: 10px;
@@ -246,3 +245,4 @@ body{
   letter-spacing: .08em;
   text-transform: uppercase;
 }
+
