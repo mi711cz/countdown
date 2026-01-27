@@ -11,6 +11,7 @@ const state = new Map(); // key -> lastValue
 
 function buildCard(el, initial="0") {
   el.innerHTML = `
+    <div class="static">${initial}</div>
     <div class="top">${initial}</div>
     <div class="bot">${initial}</div>
     <div class="divider"></div>
@@ -35,6 +36,8 @@ function setFlip(key, value) {
 
   const top = el.querySelector(".top");
   const bot = el.querySelector(".bot");
+  const stat = el.querySelector(".static");
+
 
   // Animation-Layer einsetzen
   const animTop = document.createElement("div");
@@ -52,6 +55,7 @@ function setFlip(key, value) {
 
   // Nach Flip: statische Hälften auf neuen Wert setzen, Animationslayer entfernen
   const cleanup = () => {
+    stat.textContent = value;
     top.textContent = value;
     bot.textContent = value;
     el.classList.remove("flipping");

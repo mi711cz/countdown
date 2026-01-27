@@ -200,6 +200,32 @@ body{
   animation: flipBot 260ms ease-out forwards;
 }
 
+/* Normalzustand: nur eine Ziffer sichtbar */
+.flip .static{
+  position:absolute;
+  inset:0;
+  display:grid;
+  place-items:center;
+  font-variant-numeric:tabular-nums;
+  font-weight:900;
+  font-size:clamp(36px, 4vw, 56px);
+  letter-spacing:.06em;
+  text-shadow:0 10px 28px rgba(0,0,0,.35);
+  z-index:3;
+}
+
+/* Die beiden Hälften im Normalzustand komplett ausblenden */
+.flip .top,
+.flip .bot{
+  opacity:0; /* wichtig gegen "doppelte Zahl" */
+}
+
+/* Beim Flip: statische Ziffer ausblenden, Animation sichtbar */
+.flip.flipping .static{
+  opacity:0;
+}
+
+
 @keyframes flipTop{
   from{ transform:rotateX(0deg); }
   to{ transform:rotateX(-90deg); }
