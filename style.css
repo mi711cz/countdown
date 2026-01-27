@@ -124,107 +124,78 @@ body{
   z-index:4;
 }
 
-/* statische Anzeige: Text an die Mitte "andocken" */
+/* Halben-Container */
 .flip .top,
-.flip .bot{
-  position:absolute;
-  left:0; right:0;
-  height:50%;
-  display:flex;                 /* statt grid */
-  justify-content:center;
-  font-variant-numeric:tabular-nums;
-  font-weight:900;
-  font-size:clamp(36px, 4vw, 56px);
-  letter-spacing:.06em;
-  text-shadow:0 10px 28px rgba(0,0,0,.35);
-  z-index:2;
-  line-height:1;                /* wichtig */
-  overflow:hidden;              /* clippt sauber */
-}
-
-/* oben: unten ausrichten, leicht nach unten schieben */
-.flip .top{
-  top:0;
-  align-items:flex-end;
-  padding-bottom:10px;
-}
-
-/* unten: oben ausrichten, leicht nach oben schieben */
-.flip .bot{
-  bottom:0;
-  align-items:flex-start;
-  padding-top:10px;
-}
-
-/* Animationselemente genauso andocken */
+.flip .bot,
 .flip .animTop,
 .flip .animBot{
   position:absolute;
   left:0; right:0;
   height:50%;
-  display:flex;                 /* statt grid */
+  overflow:hidden;                 /* wichtig: schneidet die Hälfte ab */
+  z-index:2;
+}
+
+/* Position der Hälften */
+.flip .top, .flip .animTop{ top:0; }
+.flip .bot, .flip .animBot{ bottom:0; }
+
+/* Der eigentliche Ziffern-Text: einmal korrekt zentriert */
+.flip .digit{
+  position:absolute;
+  left:0; right:0;
+  top:50%;
+  transform:translateY(-50%);
+  display:flex;
   justify-content:center;
+  align-items:center;
+
   font-variant-numeric:tabular-nums;
   font-weight:900;
   font-size:clamp(36px, 4vw, 56px);
   letter-spacing:.06em;
+  line-height:1;
+  text-shadow:0 10px 28px rgba(0,0,0,.35);
+}
+
+/* Clip: obere Hälfte zeigt nur oben, untere Hälfte zeigt nur unten */
+.flip .top .digit,
+.flip .animTop .digit{
+  transform:translateY(-50%);
+  clip-path: inset(0 0 50% 0);     /* nur obere Hälfte sichtbar */
+}
+
+.flip .bot .digit,
+.flip .animBot .digit{
+  transform:translateY(-50%);
+  clip-path: inset(50% 0 0 0);     /* nur untere Hälfte sichtbar */
+}
+
+/* Animation: gleiche Idee, nur rotierend */
+.flip .animTop,
+.flip .animBot{
   z-index:5;
   backface-visibility:hidden;
   transform-style:preserve-3d;
-  line-height:1;
-  overflow:hidden;
 }
 
 .flip .animTop{
-  top:0;
-  align-items:flex-end;
-  padding-bottom:10px;
   transform-origin:bottom;
   background:linear-gradient(180deg, rgba(255,255,255,.06), rgba(0,0,0,.05));
 }
 
 .flip .animBot{
-  bottom:0;
-  align-items:flex-start;
-  padding-top:10px;
   transform-origin:top;
   background:linear-gradient(180deg, rgba(0,0,0,.10), rgba(255,255,255,.02));
   transform:rotateX(90deg);
 }
 
-/* “Flip” */
 .flip.flipping .animTop{
   animation: flipTop 260ms ease-in forwards;
 }
 .flip.flipping .animBot{
   animation: flipBot 260ms ease-out forwards;
 }
-
-/* Normalzustand: nur eine Ziffer sichtbar */
-.flip .static{
-  position:absolute;
-  inset:0;
-  display:grid;
-  place-items:center;
-  font-variant-numeric:tabular-nums;
-  font-weight:900;
-  font-size:clamp(36px, 4vw, 56px);
-  letter-spacing:.06em;
-  text-shadow:0 10px 28px rgba(0,0,0,.35);
-  z-index:3;
-}
-
-/* Die beiden Hälften im Normalzustand komplett ausblenden */
-.flip .top,
-.flip .bot{
-  opacity:0; /* wichtig gegen "doppelte Zahl" */
-}
-
-/* Beim Flip: statische Ziffer ausblenden, Animation sichtbar */
-.flip.flipping .static{
-  opacity:0;
-}
-
 
 @keyframes flipTop{
   from{ transform:rotateX(0deg); }
@@ -234,6 +205,7 @@ body{
   from{ transform:rotateX(90deg); }
   to{ transform:rotateX(0deg); }
 }
+
 
 .hint{
   margin-top:18px;
