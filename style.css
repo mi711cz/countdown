@@ -1,42 +1,204 @@
-:root {
-  --bg: #0b1020;
-  --fg: #eaf0ff;
-  --muted: #aab6d6;
+:root{
+  --bg:#070b18;
+  --fg:#eaf0ff;
+  --muted:#aab6d6;
+  --card:#0f1733;
+  --card2:#0b122a;
+  --line:#1f2a55;
+  --shadow: 0 12px 40px rgba(0,0,0,.35);
 }
 
-* { box-sizing: border-box; }
+*{box-sizing:border-box}
+html,body{height:100%}
 
-body {
-  margin: 0;
-  min-height: 100vh;
-  display: grid;
-  place-items: center;
-  background: radial-gradient(1200px 600px at 50% 20%, #1a2a6b33, transparent),
-              var(--bg);
-  color: var(--fg);
-  font-family: system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
+body{
+  margin:0;
+  display:grid;
+  place-items:center;
+  background:
+    radial-gradient(900px 500px at 50% 25%, rgba(87,117,255,.18), transparent 60%),
+    radial-gradient(900px 500px at 20% 80%, rgba(0,255,200,.08), transparent 60%),
+    var(--bg);
+  color:var(--fg);
+  font-family:system-ui,-apple-system,Segoe UI,Roboto,Arial,sans-serif;
 }
 
-.wrap {
-  text-align: center;
-  padding: 32px 20px;
+.wrap{
+  width:min(1100px, 96vw);
+  padding:28px 16px 22px;
+  text-align:center;
 }
 
-.days {
-  font-size: clamp(48px, 8vw, 96px);
-  font-weight: 800;
-  letter-spacing: 0.02em;
+.row{
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+  gap:10px;
 }
 
-.time {
-  margin-top: 10px;
-  font-size: clamp(22px, 3vw, 34px);
-  font-variant-numeric: tabular-nums;
-  letter-spacing: 0.06em;
+.row-days{ margin-bottom:22px; }
+
+.label{
+  color:var(--muted);
+  font-size:14px;
+  letter-spacing:.12em;
+  text-transform:uppercase;
 }
 
-.hint {
-  margin-top: 14px;
-  color: var(--muted);
-  font-size: 14px;
+.daysValue{
+  font-size:clamp(46px, 8vw, 92px);
+  font-weight:900;
+  letter-spacing:.04em;
+  text-shadow:0 10px 30px rgba(0,0,0,.35);
+}
+
+.clock{
+  display:flex;
+  align-items:flex-end;
+  justify-content:center;
+  gap:14px;
+  flex-wrap:wrap;
+}
+
+.unit{
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+  gap:8px;
+}
+
+.unitLabel{
+  color:var(--muted);
+  font-size:12px;
+  letter-spacing:.12em;
+  text-transform:uppercase;
+}
+
+.cards{
+  display:flex;
+  gap:10px;
+}
+
+.sep{
+  font-size:clamp(28px, 3vw, 44px);
+  font-weight:700;
+  line-height:1;
+  opacity:.85;
+  padding:0 2px 14px;
+}
+
+.flip{
+  width:clamp(56px, 7vw, 84px);
+  height:clamp(78px, 9vw, 110px);
+  border-radius:18px;
+  background:linear-gradient(180deg, var(--card), var(--card2));
+  box-shadow:var(--shadow);
+  position:relative;
+  overflow:hidden;
+  border:1px solid rgba(255,255,255,.07);
+}
+
+.unit.ms .flip{
+  width:clamp(46px, 6vw, 74px);
+}
+
+/* obere/untere Hälfte + Trennlinie */
+.flip::before,
+.flip::after{
+  content:"";
+  position:absolute;
+  left:0; right:0;
+  height:50%;
+  background:rgba(255,255,255,.03);
+}
+.flip::before{ top:0; }
+.flip::after{ bottom:0; background:rgba(0,0,0,.12); }
+
+.flip .divider{
+  position:absolute;
+  left:0; right:0;
+  top:50%;
+  height:1px;
+  background:var(--line);
+  transform:translateY(-.5px);
+  z-index:4;
+}
+
+/* statische Anzeige */
+.flip .top,
+.flip .bot{
+  position:absolute;
+  left:0; right:0;
+  height:50%;
+  display:grid;
+  place-items:center;
+  font-variant-numeric:tabular-nums;
+  font-weight:900;
+  font-size:clamp(36px, 4vw, 56px);
+  letter-spacing:.06em;
+  text-shadow:0 10px 28px rgba(0,0,0,.35);
+  z-index:2;
+}
+.flip .top{ top:0; }
+.flip .bot{ bottom:0; }
+
+/* Animationselemente */
+.flip .animTop,
+.flip .animBot{
+  position:absolute;
+  left:0; right:0;
+  height:50%;
+  display:grid;
+  place-items:center;
+  font-variant-numeric:tabular-nums;
+  font-weight:900;
+  font-size:clamp(36px, 4vw, 56px);
+  letter-spacing:.06em;
+  z-index:5;
+  backface-visibility:hidden;
+  transform-style:preserve-3d;
+}
+
+.flip .animTop{
+  top:0;
+  transform-origin:bottom;
+  background:linear-gradient(180deg, rgba(255,255,255,.06), rgba(0,0,0,.05));
+}
+.flip .animBot{
+  bottom:0;
+  transform-origin:top;
+  background:linear-gradient(180deg, rgba(0,0,0,.10), rgba(255,255,255,.02));
+  transform:rotateX(90deg);
+}
+
+/* “Flip” */
+.flip.flipping .animTop{
+  animation: flipTop 260ms ease-in forwards;
+}
+.flip.flipping .animBot{
+  animation: flipBot 260ms ease-out forwards;
+}
+
+@keyframes flipTop{
+  from{ transform:rotateX(0deg); }
+  to{ transform:rotateX(-90deg); }
+}
+@keyframes flipBot{
+  from{ transform:rotateX(90deg); }
+  to{ transform:rotateX(0deg); }
+}
+
+.hint{
+  margin-top:18px;
+  color:var(--muted);
+  font-size:14px;
+}
+
+.finished .daysValue{
+  animation: pop 600ms ease-in-out both;
+}
+@keyframes pop{
+  0%{ transform:scale(1); }
+  40%{ transform:scale(1.06); }
+  100%{ transform:scale(1); }
 }
