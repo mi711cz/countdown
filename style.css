@@ -124,32 +124,46 @@ body{
   z-index:4;
 }
 
-/* statische Anzeige */
+/* statische Anzeige: Text an die Mitte "andocken" */
 .flip .top,
 .flip .bot{
   position:absolute;
   left:0; right:0;
   height:50%;
-  display:grid;
-  place-items:center;
+  display:flex;                 /* statt grid */
+  justify-content:center;
   font-variant-numeric:tabular-nums;
   font-weight:900;
   font-size:clamp(36px, 4vw, 56px);
   letter-spacing:.06em;
   text-shadow:0 10px 28px rgba(0,0,0,.35);
   z-index:2;
+  line-height:1;                /* wichtig */
+  overflow:hidden;              /* clippt sauber */
 }
-.flip .top{ top:0; }
-.flip .bot{ bottom:0; }
 
-/* Animationselemente */
+/* oben: unten ausrichten, leicht nach unten schieben */
+.flip .top{
+  top:0;
+  align-items:flex-end;
+  padding-bottom:10px;
+}
+
+/* unten: oben ausrichten, leicht nach oben schieben */
+.flip .bot{
+  bottom:0;
+  align-items:flex-start;
+  padding-top:10px;
+}
+
+/* Animationselemente genauso andocken */
 .flip .animTop,
 .flip .animBot{
   position:absolute;
   left:0; right:0;
   height:50%;
-  display:grid;
-  place-items:center;
+  display:flex;                 /* statt grid */
+  justify-content:center;
   font-variant-numeric:tabular-nums;
   font-weight:900;
   font-size:clamp(36px, 4vw, 56px);
@@ -157,15 +171,22 @@ body{
   z-index:5;
   backface-visibility:hidden;
   transform-style:preserve-3d;
+  line-height:1;
+  overflow:hidden;
 }
 
 .flip .animTop{
   top:0;
+  align-items:flex-end;
+  padding-bottom:10px;
   transform-origin:bottom;
   background:linear-gradient(180deg, rgba(255,255,255,.06), rgba(0,0,0,.05));
 }
+
 .flip .animBot{
   bottom:0;
+  align-items:flex-start;
+  padding-top:10px;
   transform-origin:top;
   background:linear-gradient(180deg, rgba(0,0,0,.10), rgba(255,255,255,.02));
   transform:rotateX(90deg);
