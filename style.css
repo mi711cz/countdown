@@ -87,91 +87,72 @@ body{
   padding:0 2px 14px;
 }
 
-.flip{
-  width:clamp(56px, 7vw, 84px);
-  height:clamp(78px, 9vw, 110px);
-  border-radius:18px;
-  background:linear-gradient(180deg, var(--card), var(--card2));
-  box-shadow:var(--shadow);
-  position:relative;
-  overflow:hidden;
-  border:1px solid rgba(255,255,255,.07);
-}
-
-.unit.ms .flip{
-  width:clamp(46px, 6vw, 74px);
-}
-
-/* obere/untere Hälfte + Trennlinie */
-.flip::before,
-.flip::after{
-  content:"";
-  position:absolute;
-  left:0; right:0;
-  height:50%;
-  background:rgba(255,255,255,.03);
-}
-.flip::before{ top:0; }
-.flip::after{ bottom:0; background:rgba(0,0,0,.12); }
-
-.flip .divider{
-  position:absolute;
-  left:0; right:0;
-  top:50%;
-  height:1px;
-  background:var(--line);
-  transform:translateY(-.5px);
-  z-index:4;
-}
-
-/* statische Anzeige */
+/* Halben-Container */
 .flip .top,
-.flip .bot{
-  position:absolute;
-  left:0; right:0;
-  height:50%;
-  display:grid;
-  place-items:center;
-  font-variant-numeric:tabular-nums;
-  font-weight:900;
-  font-size:clamp(36px, 4vw, 56px);
-  letter-spacing:.06em;
-  text-shadow:0 10px 28px rgba(0,0,0,.35);
-  z-index:2;
-}
-.flip .top{ top:0; }
-.flip .bot{ bottom:0; }
-
-/* Animationselemente */
+.flip .bot,
 .flip .animTop,
 .flip .animBot{
   position:absolute;
   left:0; right:0;
   height:50%;
-  display:grid;
-  place-items:center;
+  overflow:hidden;                 /* wichtig: schneidet die Hälfte ab */
+  z-index:2;
+}
+
+/* Position der Hälften */
+.flip .top, .flip .animTop{ top:0; }
+.flip .bot, .flip .animBot{ bottom:0; }
+
+/* Der eigentliche Ziffern-Text: einmal korrekt zentriert */
+.flip .digit{
+  position:absolute;
+  left:0; right:0;
+  top:50%;
+  transform:translateY(-50%);
+  display:flex;
+  justify-content:center;
+  align-items:center;
+
   font-variant-numeric:tabular-nums;
   font-weight:900;
   font-size:clamp(36px, 4vw, 56px);
   letter-spacing:.06em;
+  line-height:1;
+  text-shadow:0 10px 28px rgba(0,0,0,.35);
+}
+
+/* Clip: obere Hälfte zeigt nur oben, untere Hälfte zeigt nur unten */
+.flip .top .digit,
+.flip .animTop .digit{
+  transform:translateY(-50%);
+  clip-path: inset(0 0 50% 0);     /* nur obere Hälfte sichtbar */
+}
+
+.flip .bot .digit,
+.flip .animBot .digit{
+  transform:translateY(-50%);
+  clip-path: inset(50% 0 0 0);     /* nur untere Hälfte sichtbar */
+}
+
+/* Animation: gleiche Idee, nur rotierend */
+.flip .animTop,
+.flip .animBot{
   z-index:5;
   backface-visibility:hidden;
   transform-style:preserve-3d;
 }
 
 .flip .animTop{
-  top:0;
   transform-origin:bottom;
   background:linear-gradient(180deg, rgba(255,255,255,.06), rgba(0,0,0,.05));
 }
+
 .flip .animBot{
-  bottom:0;
   transform-origin:top;
   background:linear-gradient(180deg, rgba(0,0,0,.10), rgba(255,255,255,.02));
   transform:rotateX(90deg);
 }
 
-/* “Flip” */
 .flip.flipping .animTop{
   animation: flipTop 260ms ease-in forwards;
 }
@@ -187,6 +168,7 @@ body{
   from{ transform:rotateX(90deg); }
   to{ transform:rotateX(0deg); }
 }
+
 
 .hint{
   margin-top:18px;
