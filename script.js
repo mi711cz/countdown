@@ -14,12 +14,9 @@ const flipByKey = new Map(flips.map(el => [el.dataset.key, el]));
 
 function buildCard(el, initial = "0") {
   el.innerHTML = `
-<<<<<<< HEAD
-<<<<<<< HEAD
     <div class="top"><div class="digit">${initial}</div></div>
     <div class="bot"><div class="digit">${initial}</div></div>
     <div class="divider" aria-hidden="true"></div>
->>>>>>> debug
   `;
 }
 
@@ -46,10 +43,6 @@ function setFlip(key, value) {
   const animBot = document.createElement("div");
   animBot.className = "animBot";
   animBot.innerHTML = `<div class="digit">${value}</div>`;
-<<<<<<< HEAD
-
-=======
->>>>>>> debug
 
   el.appendChild(animTop);
   el.appendChild(animBot);
@@ -58,7 +51,6 @@ function setFlip(key, value) {
   const cleanup = () => {
     el.querySelector(".top .digit").textContent = value;
     el.querySelector(".bot .digit").textContent = value;
->>>>>>> debug
     el.classList.remove("flipping");
     animTop.remove();
     animBot.remove();
