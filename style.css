@@ -120,11 +120,7 @@ body{
   position:absolute;
   left:0; right:0;
   height:50%;
-<<<<<<< HEAD
-  overflow:hidden;                 /* wichtig: schneidet die Hälfte ab */
-=======
   overflow:hidden;
->>>>>>> debug
   z-index:2;
 }
 
@@ -132,19 +128,10 @@ body{
 .flip .top, .flip .animTop{ top:0; }
 .flip .bot, .flip .animBot{ bottom:0; }
 
-<<<<<<< HEAD
-/* Der eigentliche Ziffern-Text: einmal korrekt zentriert */
-.flip .digit{
-  position:absolute;
-  left:0; right:0;
-  top:50%;
-  transform:translateY(-50%);
-=======
 /* Ziffern */
 .flip .digit{
   position:absolute;
   left:0; right:0;
->>>>>>> debug
   display:flex;
   justify-content:center;
   align-items:center;
@@ -157,22 +144,6 @@ body{
   text-shadow:0 10px 28px rgba(0,0,0,.35);
 }
 
-<<<<<<< HEAD
-/* Clip: obere Hälfte zeigt nur oben, untere Hälfte zeigt nur unten */
-.flip .top .digit,
-.flip .animTop .digit{
-  transform:translateY(-50%);
-  clip-path: inset(0 0 50% 0);     /* nur obere Hälfte sichtbar */
-}
-
-.flip .bot .digit,
-.flip .animBot .digit{
-  transform:translateY(-50%);
-  clip-path: inset(50% 0 0 0);     /* nur untere Hälfte sichtbar */
-}
-
-/* Animation: gleiche Idee, nur rotierend */
-=======
 /* In der oberen Hälfte liegt die Card-Mitte am unteren Rand der Top-Hälfte */
 .flip .top .digit,
 .flip .animTop .digit{
@@ -188,7 +159,6 @@ body{
 }
 
 /* Animation */
->>>>>>> debug
 .flip .animTop,
 .flip .animBot{
   z-index:5;
@@ -207,17 +177,8 @@ body{
   transform:rotateX(90deg);
 }
 
-<<<<<<< HEAD
-.flip.flipping .animTop{
-  animation: flipTop 260ms ease-in forwards;
-}
-.flip.flipping .animBot{
-  animation: flipBot 260ms ease-out forwards;
-}
-=======
 .flip.flipping .animTop{ animation: flipTop 260ms ease-in forwards; }
 .flip.flipping .animBot{ animation: flipBot 260ms ease-out forwards; }
->>>>>>> debug
 
 @keyframes flipTop{
   from{ transform:rotateX(0deg); }
@@ -228,13 +189,10 @@ body{
   to{ transform:rotateX(0deg); }
 }
 
-<<<<<<< HEAD
-=======
 @media (prefers-reduced-motion: reduce){
   .flip.flipping .animTop,
   .flip.flipping .animBot{ animation:none; }
 }
->>>>>>> debug
 
 .hint{
   margin-top:18px;
