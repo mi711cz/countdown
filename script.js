@@ -11,8 +11,13 @@ const state = new Map(); // key -> lastValue
 
 function buildCard(el, initial="0") {
   el.innerHTML = `
+<<<<<<< HEAD
     <div class="top"><div class="digit">${initial}</div></div>
     <div class="bot"><div class="digit">${initial}</div></div>
+=======
+    <div class="top">${initial}</div>
+    <div class="bot">${initial}</div>
+>>>>>>> debug
     <div class="divider"></div>
   `;
 }
@@ -35,8 +40,6 @@ function setFlip(key, value) {
 
   const top = el.querySelector(".top");
   const bot = el.querySelector(".bot");
-  const stat = el.querySelector(".static");
-
 
   const animTop = document.createElement("div");
   animTop.className = "animTop";
@@ -54,9 +57,14 @@ function setFlip(key, value) {
 
   // Nach Flip: statische Hälften auf neuen Wert setzen, Animationslayer entfernen
   const cleanup = () => {
+<<<<<<< HEAD
     stat.textContent = value;
     el.querySelector(".top .digit").textContent = value;
     el.querySelector(".bot .digit").textContent = value;
+=======
+    top.textContent = value;
+    bot.textContent = value;
+>>>>>>> debug
     el.classList.remove("flipping");
     animTop.remove();
     animBot.remove();
@@ -76,14 +84,12 @@ function update() {
     hintEl.textContent = "Ziel erreicht 🎉";
     wrap.classList.add("finished");
 
-    // Alles auf 00:00:00 setzen
+    // Alles auf 00:00:00.000 setzen
     ["hh1","hh2","mm1","mm2","ss1","ss2"].forEach(k => setFlip(k,"0"));
-
     return;
   }
 
   diff = Math.floor(diff / 1000);
-
 
   const sec = diff % 60;
   diff = Math.floor(diff / 60);
