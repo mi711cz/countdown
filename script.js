@@ -65,8 +65,8 @@ function setFlip(key, value) {
 }
 
 function renderCountdown(days, hrs, min, sec){
-  // Tage (3-stellig wie im HTML-Startwert)
-  daysEl.textContent = pad3(days);
+  // Tage 
+  daysEl.textContent = String(days);
 
   const HH = pad2(hrs);
   const MM = pad2(min);
