@@ -78,6 +78,8 @@ function update() {
     return;
   }
 
+  diff = Math.floor(diff / 1000);
+
   const sec = diff % 60;
   diff = Math.floor(diff / 60);
 
