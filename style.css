@@ -133,33 +133,32 @@ body{
 .flip .digit{
   position:absolute;
   left:0; right:0;
-  top:50%;
-  transform:translateY(-50%);
   display:flex;
   justify-content:center;
   align-items:center;
 
   font-variant-numeric:tabular-nums;
   font-weight:900;
-  font-size: calc(var(--flip-h) * 0.46); /* passt in eine Hälfte */
+  font-size:clamp(36px, 4vw, 56px);
   letter-spacing:.06em;
   line-height:1;
   text-shadow:0 10px 28px rgba(0,0,0,.35);
 }
 
-
-/* Clip: obere Hälfte / untere Hälfte */
-/*
+/* In der oberen Hälfte liegt die Card-Mitte am unteren Rand der Top-Hälfte */
 .flip .top .digit,
 .flip .animTop .digit{
-  clip-path: inset(0 0 50% 0);
+  top:100%;
+  transform:translateY(-50%);
 }
 
+/* In der unteren Hälfte liegt die Card-Mitte am oberen Rand der Bottom-Hälfte */
 .flip .bot .digit,
 .flip .animBot .digit{
-  clip-path: inset(50% 0 0 0);
+  top:0%;
+  transform:translateY(-50%);
 }
-*/
+
 
 /* Animation */
 .flip .animTop,
