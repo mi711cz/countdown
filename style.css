@@ -8,8 +8,8 @@
   --shadow: 0 12px 40px rgba(0,0,0,.35);
 }
 
-*{box-sizing:border-box}
-html,body{height:100%}
+*{ box-sizing:border-box; }
+html,body{ height:100%; }
 
 body{
   margin:0;
@@ -40,7 +40,7 @@ body{
 
 .label{
   color:var(--muted);
-  font-size:14px;
+  font-size:16px;
   letter-spacing:.12em;
   text-transform:uppercase;
 }
@@ -69,7 +69,7 @@ body{
 
 .unitLabel{
   color:var(--muted);
-  font-size:12px;
+  font-size:16px;
   letter-spacing:.12em;
   text-transform:uppercase;
 }
@@ -87,43 +87,32 @@ body{
   padding:0 2px 14px;
 }
 
+/* WICHTIG: Flip-Container braucht Größe + position:relative */
 .flip{
-  width:clamp(56px, 7vw, 84px);
-  height:clamp(78px, 9vw, 110px);
-  border-radius:18px;
+  position:relative;
+  --flip-w: clamp(54px, 6vw, 74px);
+  --flip-h: clamp(72px, 8vw, 96px);
+
+  width:var(--flip-w);
+  height:var(--flip-h);
+  border-radius:14px;
   background:linear-gradient(180deg, var(--card), var(--card2));
   box-shadow:var(--shadow);
-  position:relative;
+  outline:1px solid var(--line);
   overflow:hidden;
-  border:1px solid rgba(255,255,255,.07);
 }
 
-.unit.ms .flip{
-  width:clamp(46px, 6vw, 74px);
-}
-
-/* obere/untere Hälfte + Trennlinie */
-.flip::before,
-.flip::after{
-  content:"";
-  position:absolute;
-  left:0; right:0;
-  height:50%;
-  background:rgba(255,255,255,.03);
-}
-.flip::before{ top:0; }
-.flip::after{ bottom:0; background:rgba(0,0,0,.12); }
-
+/* Mittellinie */
 .flip .divider{
   position:absolute;
   left:0; right:0;
   top:50%;
   height:1px;
-  background:var(--line);
-  transform:translateY(-.5px);
-  z-index:4;
+  background:rgba(255,255,255,.10);
+  z-index:6;
 }
 
+<<<<<<< HEAD
 <<<<<<< HEAD
 /* Halben-Container */
 .flip .top,
@@ -149,13 +138,22 @@ body{
 
 /* Animationselemente */
 >>>>>>> debug
+=======
+/* Halben-Container */
+.flip .top,
+.flip .bot,
+>>>>>>> debug
 .flip .animTop,
 .flip .animBot{
   position:absolute;
   left:0; right:0;
   height:50%;
 <<<<<<< HEAD
+<<<<<<< HEAD
   overflow:hidden;                 /* wichtig: schneidet die Hälfte ab */
+=======
+  overflow:hidden;
+>>>>>>> debug
   z-index:2;
 }
 
@@ -163,19 +161,29 @@ body{
 .flip .top, .flip .animTop{ top:0; }
 .flip .bot, .flip .animBot{ bottom:0; }
 
+<<<<<<< HEAD
 /* Der eigentliche Ziffern-Text: einmal korrekt zentriert */
 .flip .digit{
   position:absolute;
   left:0; right:0;
   top:50%;
   transform:translateY(-50%);
+=======
+/* Ziffern */
+.flip .digit{
+  position:absolute;
+  left:0; right:0;
+>>>>>>> debug
   display:flex;
   justify-content:center;
   align-items:center;
 
+<<<<<<< HEAD
 =======
   display:grid;
   place-items:center;
+>>>>>>> debug
+=======
 >>>>>>> debug
   font-variant-numeric:tabular-nums;
   font-weight:900;
@@ -185,6 +193,7 @@ body{
   text-shadow:0 10px 28px rgba(0,0,0,.35);
 }
 
+<<<<<<< HEAD
 /* Clip: obere Hälfte zeigt nur oben, untere Hälfte zeigt nur unten */
 .flip .top .digit,
 .flip .animTop .digit{
@@ -199,6 +208,23 @@ body{
 }
 
 /* Animation: gleiche Idee, nur rotierend */
+=======
+/* In der oberen Hälfte liegt die Card-Mitte am unteren Rand der Top-Hälfte */
+.flip .top .digit,
+.flip .animTop .digit{
+  top:100%;
+  transform:translateY(-50%);
+}
+
+/* In der unteren Hälfte liegt die Card-Mitte am oberen Rand der Bottom-Hälfte */
+.flip .bot .digit,
+.flip .animBot .digit{
+  top:0%;
+  transform:translateY(-50%);
+}
+
+/* Animation */
+>>>>>>> debug
 .flip .animTop,
 .flip .animBot{
   z-index:5;
@@ -208,28 +234,40 @@ body{
 
 .flip .animTop{
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
   top:0;
+>>>>>>> debug
+=======
 >>>>>>> debug
   transform-origin:bottom;
   background:linear-gradient(180deg, rgba(255,255,255,.06), rgba(0,0,0,.05));
 }
+
 .flip .animBot{
+<<<<<<< HEAD
 <<<<<<< HEAD
 =======
   bottom:0;
+>>>>>>> debug
+=======
 >>>>>>> debug
   transform-origin:top;
   background:linear-gradient(180deg, rgba(0,0,0,.10), rgba(255,255,255,.02));
   transform:rotateX(90deg);
 }
 
+<<<<<<< HEAD
 .flip.flipping .animTop{
   animation: flipTop 260ms ease-in forwards;
 }
 .flip.flipping .animBot{
   animation: flipBot 260ms ease-out forwards;
 }
+=======
+.flip.flipping .animTop{ animation: flipTop 260ms ease-in forwards; }
+.flip.flipping .animBot{ animation: flipBot 260ms ease-out forwards; }
+>>>>>>> debug
 
 @keyframes flipTop{
   from{ transform:rotateX(0deg); }
@@ -240,11 +278,18 @@ body{
   to{ transform:rotateX(0deg); }
 }
 
+<<<<<<< HEAD
+=======
+@media (prefers-reduced-motion: reduce){
+  .flip.flipping .animTop,
+  .flip.flipping .animBot{ animation:none; }
+}
+>>>>>>> debug
 
 .hint{
   margin-top:18px;
   color:var(--muted);
-  font-size:14px;
+  font-size:10px;
 }
 
 .finished .daysValue{
@@ -254,4 +299,15 @@ body{
   0%{ transform:scale(1); }
   40%{ transform:scale(1.06); }
   100%{ transform:scale(1); }
+}
+
+/* Screenreader-only */
+.sr-only{
+  position:absolute !important;
+  width:1px; height:1px;
+  padding:0; margin:-1px;
+  overflow:hidden;
+  clip:rect(0,0,0,0);
+  white-space:nowrap;
+  border:0;
 }
