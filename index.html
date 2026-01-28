@@ -7,10 +7,13 @@
   <link rel="stylesheet" href="style.css" />
 </head>
 <body>
-  <main class="wrap" aria-live="polite">
+  <main class="wrap">
+    <!-- Screenreader-Status (nur Text, keine Flip-Animation) -->
+    <p id="srStatus" class="sr-only" aria-live="polite"></p>
+
     <!-- Zeile 1: Tage -->
-    <section class="row row-days">
-      <div class="label">Days</div>
+    <section class="row row-days" aria-label="Countdown Tage">
+      <div class="label">Tage</div>
       <div class="daysValue" id="daysValue">000</div>
     </section>
 
@@ -18,37 +21,36 @@
     <section class="row row-clock">
       <div class="clock" role="group" aria-label="Countdown Uhrzeit">
         <div class="unit">
-          <div class="unitLabel">Hours</div>
-          <div class="cards">
+          <div class="unitLabel">Stunden</div>
+          <div class="cards" aria-hidden="true">
             <div class="flip" data-key="hh1"></div>
             <div class="flip" data-key="hh2"></div>
           </div>
         </div>
 
-        <div class="sep">:</div>
+        <div class="sep" aria-hidden="true">:</div>
 
         <div class="unit">
-          <div class="unitLabel">Minutes</div>
-          <div class="cards">
+          <div class="unitLabel">Minuten</div>
+          <div class="cards" aria-hidden="true">
             <div class="flip" data-key="mm1"></div>
             <div class="flip" data-key="mm2"></div>
           </div>
         </div>
 
-        <div class="sep">:</div>
+        <div class="sep" aria-hidden="true">:</div>
 
         <div class="unit">
-          <div class="unitLabel">Seconds</div>
-          <div class="cards">
+          <div class="unitLabel">Sekunden</div>
+          <div class="cards" aria-hidden="true">
             <div class="flip" data-key="ss1"></div>
             <div class="flip" data-key="ss2"></div>
           </div>
         </div>
-
       </div>
     </section>
 
-    <div class="hint" id="hint">Countdown until 01.03.2026 (Europe/Berlin)</div>
+    <div class="hint" id="hint">Countdown bis 01.03.2026 (Europe/Berlin)</div>
   </main>
 
   <script src="script.js"></script>

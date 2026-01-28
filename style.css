@@ -8,8 +8,8 @@
   --shadow: 0 12px 40px rgba(0,0,0,.35);
 }
 
-*{box-sizing:border-box}
-html,body{height:100%}
+*{ box-sizing:border-box; }
+html,body{ height:100%; }
 
 body{
   margin:0;
@@ -87,6 +87,28 @@ body{
   padding:0 2px 14px;
 }
 
+/* WICHTIG: Flip-Container braucht Größe + position:relative */
+.flip{
+  position:relative;
+  width:clamp(54px, 6vw, 74px);
+  height:clamp(72px, 8vw, 96px);
+  border-radius:14px;
+  background:linear-gradient(180deg, var(--card), var(--card2));
+  box-shadow:var(--shadow);
+  outline:1px solid var(--line);
+  overflow:hidden;
+}
+
+/* Mittellinie */
+.flip .divider{
+  position:absolute;
+  left:0; right:0;
+  top:50%;
+  height:1px;
+  background:rgba(255,255,255,.10);
+  z-index:6;
+}
+
 /* Halben-Container */
 .flip .top,
 .flip .bot,
@@ -95,7 +117,7 @@ body{
   position:absolute;
   left:0; right:0;
   height:50%;
-  overflow:hidden;                 /* wichtig: schneidet die Hälfte ab */
+  overflow:hidden;
   z-index:2;
 }
 
@@ -103,7 +125,7 @@ body{
 .flip .top, .flip .animTop{ top:0; }
 .flip .bot, .flip .animBot{ bottom:0; }
 
-/* Der eigentliche Ziffern-Text: einmal korrekt zentriert */
+/* Ziffern */
 .flip .digit{
   position:absolute;
   left:0; right:0;
@@ -121,20 +143,18 @@ body{
   text-shadow:0 10px 28px rgba(0,0,0,.35);
 }
 
-/* Clip: obere Hälfte zeigt nur oben, untere Hälfte zeigt nur unten */
+/* Clip: obere Hälfte / untere Hälfte */
 .flip .top .digit,
 .flip .animTop .digit{
-  transform:translateY(-50%);
-  clip-path: inset(0 0 50% 0);     /* nur obere Hälfte sichtbar */
+  clip-path: inset(0 0 50% 0);
 }
 
 .flip .bot .digit,
 .flip .animBot .digit{
-  transform:translateY(-50%);
-  clip-path: inset(50% 0 0 0);     /* nur untere Hälfte sichtbar */
+  clip-path: inset(50% 0 0 0);
 }
 
-/* Animation: gleiche Idee, nur rotierend */
+/* Animation */
 .flip .animTop,
 .flip .animBot{
   z-index:5;
@@ -153,12 +173,8 @@ body{
   transform:rotateX(90deg);
 }
 
-.flip.flipping .animTop{
-  animation: flipTop 260ms ease-in forwards;
-}
-.flip.flipping .animBot{
-  animation: flipBot 260ms ease-out forwards;
-}
+.flip.flipping .animTop{ animation: flipTop 260ms ease-in forwards; }
+.flip.flipping .animBot{ animation: flipBot 260ms ease-out forwards; }
 
 @keyframes flipTop{
   from{ transform:rotateX(0deg); }
@@ -169,6 +185,10 @@ body{
   to{ transform:rotateX(0deg); }
 }
 
+@media (prefers-reduced-motion: reduce){
+  .flip.flipping .animTop,
+  .flip.flipping .animBot{ animation:none; }
+}
 
 .hint{
   margin-top:18px;
@@ -183,4 +203,15 @@ body{
   0%{ transform:scale(1); }
   40%{ transform:scale(1.06); }
   100%{ transform:scale(1); }
+}
+
+/* Screenreader-only */
+.sr-only{
+  position:absolute !important;
+  width:1px; height:1px;
+  padding:0; margin:-1px;
+  overflow:hidden;
+  clip:rect(0,0,0,0);
+  white-space:nowrap;
+  border:0;
 }
