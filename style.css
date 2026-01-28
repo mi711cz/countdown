@@ -90,14 +90,18 @@ body{
 /* WICHTIG: Flip-Container braucht Größe + position:relative */
 .flip{
   position:relative;
-  width:clamp(54px, 6vw, 74px);
-  height:clamp(72px, 8vw, 96px);
+  --flip-w: clamp(54px, 6vw, 74px);
+  --flip-h: clamp(72px, 8vw, 96px);
+
+  width:var(--flip-w);
+  height:var(--flip-h);
   border-radius:14px;
   background:linear-gradient(180deg, var(--card), var(--card2));
   box-shadow:var(--shadow);
   outline:1px solid var(--line);
   overflow:hidden;
 }
+
 
 /* Mittellinie */
 .flip .divider{
@@ -137,13 +141,15 @@ body{
 
   font-variant-numeric:tabular-nums;
   font-weight:900;
-  font-size:clamp(36px, 4vw, 56px);
+  font-size: calc(var(--flip-h) * 0.46); /* passt in eine Hälfte */
   letter-spacing:.06em;
   line-height:1;
   text-shadow:0 10px 28px rgba(0,0,0,.35);
 }
 
+
 /* Clip: obere Hälfte / untere Hälfte */
+/*
 .flip .top .digit,
 .flip .animTop .digit{
   clip-path: inset(0 0 50% 0);
@@ -153,6 +159,7 @@ body{
 .flip .animBot .digit{
   clip-path: inset(50% 0 0 0);
 }
+*/
 
 /* Animation */
 .flip .animTop,
