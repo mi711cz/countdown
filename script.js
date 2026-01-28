@@ -18,14 +18,6 @@ function buildCard(el, initial = "0") {
 <<<<<<< HEAD
     <div class="top"><div class="digit">${initial}</div></div>
     <div class="bot"><div class="digit">${initial}</div></div>
-=======
-    <div class="top">${initial}</div>
-    <div class="bot">${initial}</div>
->>>>>>> debug
-    <div class="divider"></div>
-=======
-    <div class="top"><div class="digit">${initial}</div></div>
-    <div class="bot"><div class="digit">${initial}</div></div>
     <div class="divider" aria-hidden="true"></div>
 >>>>>>> debug
   `;
@@ -47,12 +39,6 @@ function setFlip(key, value) {
   if (prev === value) return;
   state.set(key, value);
 
-<<<<<<< HEAD
-  const top = el.querySelector(".top");
-  const bot = el.querySelector(".bot");
-
-=======
->>>>>>> debug
   const animTop = document.createElement("div");
   animTop.className = "animTop";
   animTop.innerHTML = `<div class="digit">${prev}</div>`;
@@ -70,16 +56,6 @@ function setFlip(key, value) {
   el.classList.add("flipping");
 
   const cleanup = () => {
-<<<<<<< HEAD
-<<<<<<< HEAD
-    stat.textContent = value;
-    el.querySelector(".top .digit").textContent = value;
-    el.querySelector(".bot .digit").textContent = value;
-=======
-    top.textContent = value;
-    bot.textContent = value;
->>>>>>> debug
-=======
     el.querySelector(".top .digit").textContent = value;
     el.querySelector(".bot .digit").textContent = value;
 >>>>>>> debug
