@@ -1,6 +1,12 @@
-// Ziel: 01.03.2026 00:00:00 Europe/Berlin (Offset +01:00)
-// Hinweis: Für andere Daten rund um Sommerzeit besser echte TZ-Logik (Temporal/Luxon).
-const target = new Date("2026-03-01T00:00:00+01:00");
+// Countdown-Ziel wechselt automatisch zwischen:
+// - 01. März 00:00:00 (Europe/Berlin)
+// - 31. Oktober 00:00:00 (Europe/Berlin)
+// Jahr für Jahr ohne manuelle Anpassung.
+//
+// Hinweis: Wir verwenden Intl.DateTimeFormat, um den UTC-Offset für Europe/Berlin
+// zum jeweiligen Datum zu ermitteln (wichtig für Sommerzeit-Umstellungen).
+
+const TIME_ZONE = "Europe/Berlin";
 
 const daysEl = document.getElementById("daysValue");
 const hintEl = document.getElementById("hint");
@@ -11,6 +17,90 @@ const srStatusEl = document.getElementById("srStatus");
 const flips = [...document.querySelectorAll(".flip")];
 const state = new Map(); // key -> lastValue
 const flipByKey = new Map(flips.map(el => [el.dataset.key, el]));
+
+/** Liefert den Offset in Minuten des given timeZone zur gegebenen UTC-Zeit. */
+function tzOffsetMinutes(date, timeZone) {
+  // Beispiel timeZoneName: "GMT+1" / "GMT+2"
+  const dtf = new Intl.DateTimeFormat("en-US", { timeZone, timeZoneName: "shortOffset" });
+  const parts = dtf.formatToParts(date);
+  const tzName = parts.find(p => p.type === "timeZoneName")?.value || "GMT";
+  const m = tzName.match(/GMT([+-])(\d{1,2})(?::?(\d{2}))?/);
+  if (!m) return 0;
+  const sign = m[1] === "-" ? -1 : 1;
+  const hh = parseInt(m[2], 10);
+  const mm = m[3] ? parseInt(m[3], 10) : 0;
+  return sign * (hh * 60 + mm);
+}
+
+/**
+ * Baut ein Date-Objekt für eine lokale Zeit in einer IANA-Zeitzone.
+ * monthIndex ist 0-basiert (0=Jan, 2=März, 9=Oktober).
+ */
+function makeZonedDate(year, monthIndex, day, hour = 0, minute = 0, second = 0, ms = 0) {
+  // Start mit UTC-Grobwert
+  let utcMillis = Date.UTC(year, monthIndex, day, hour, minute, second, ms);
+  let d = new Date(utcMillis);
+
+  // Offset für diese Zone bestimmen und auf "UTC = local - offset" umrechnen
+  let off1 = tzOffsetMinutes(d, TIME_ZONE);
+  utcMillis = Date.UTC(year, monthIndex, day, hour, minute, second, ms) - off1 * 60 * 1000;
+  d = new Date(utcMillis);
+
+  // Noch einmal prüfen (wichtig an DST-Grenzen, z.B. wenn Offset sich ändert)
+  const off2 = tzOffsetMinutes(d, TIME_ZONE);
+  if (off2 !== off1) {
+    utcMillis = Date.UTC(year, monthIndex, day, hour, minute, second, ms) - off2 * 60 * 1000;
+    d = new Date(utcMillis);
+  }
+  return d;
+}
+
+function getZonedParts(date, timeZone) {
+  // en-CA ergibt zuverlässig YYYY-MM-DD und 24h Zeit (mit formatToParts)
+  const dtf = new Intl.DateTimeFormat("en-CA", {
+    timeZone,
+    year: "numeric",
+    month: "2-digit",
+    day: "2-digit",
+    hour: "2-digit",
+    minute: "2-digit",
+    second: "2-digit",
+    hour12: false
+  });
+  const parts = dtf.formatToParts(date);
+  const obj = {};
+  for (const p of parts) {
+    if (p.type !== "literal") obj[p.type] = p.value;
+  }
+  return {
+    year: Number(obj.year),
+    month: Number(obj.month), // 1-12
+    day: Number(obj.day),
+    hour: Number(obj.hour),
+    minute: Number(obj.minute),
+    second: Number(obj.second)
+  };
+}
+
+function pad2(n) { return String(n).padStart(2, "0"); }
+function pad3(n) { return String(n).padStart(3, "0"); } // (nicht genutzt, aber belassen)
+
+/** Nächstes Ziel (01.03. oder 31.10.) basierend auf dem aktuellen Zeitpunkt. */
+function computeTarget(now = new Date()) {
+  const { year } = getZonedParts(now, TIME_ZONE);
+
+  const march1 = makeZonedDate(year, 2, 1, 0, 0, 0, 0);
+  const oct31 = makeZonedDate(year, 9, 31, 0, 0, 0, 0);
+
+  if (now.getTime() < march1.getTime()) {
+    return { date: march1, label: `01.03.${year}` };
+  }
+  if (now.getTime() < oct31.getTime()) {
+    return { date: oct31, label: `31.10.${year}` };
+  }
+  const nextMarch = makeZonedDate(year + 1, 2, 1, 0, 0, 0, 0);
+  return { date: nextMarch, label: `01.03.${year + 1}` };
+}
 
 function buildCard(el, initial = "0") {
   el.innerHTML = `
@@ -24,9 +114,6 @@ for (const el of flips) {
   buildCard(el, "0");
   state.set(el.dataset.key, "0");
 }
-
-function pad2(n){ return String(n).padStart(2, "0"); }
-function pad3(n){ return String(n).padStart(3, "0"); }
 
 function setFlip(key, value) {
   const el = flipByKey.get(key);
@@ -64,8 +151,8 @@ function setFlip(key, value) {
   if (prefersReduced) cleanup();
 }
 
-function renderCountdown(days, hrs, min, sec){
-  // Tage 
+function renderCountdown(days, hrs, min, sec) {
+  // Tage
   daysEl.textContent = String(days);
 
   const HH = pad2(hrs);
@@ -80,19 +167,34 @@ function renderCountdown(days, hrs, min, sec){
   srStatusEl.textContent = `${days} Tage, ${HH} Stunden, ${MM} Minuten, ${SS} Sekunden verbleibend`;
 }
 
+let currentTarget = null;
+
+function ensureTarget(now) {
+  if (!currentTarget || now.getTime() >= currentTarget.date.getTime()) {
+    currentTarget = computeTarget(now);
+    const targetDateEl = document.getElementById("targetDate");
+    if (targetDateEl) targetDateEl.textContent = currentTarget.label;
+    else hintEl.textContent = `Countdown ${currentTarget.label}`;
+    wrap.classList.remove("finished");
+  }
+}
+
 function update() {
   const now = new Date();
-  let diffMs = target.getTime() - now.getTime();
 
+  // Ziel ggf. initialisieren / nach Erreichen weiterschalten
+  ensureTarget(now);
+
+  let diffMs = currentTarget.date.getTime() - now.getTime();
+
+  // Falls wir exakt "drüber" sind (z.B. Tab war im Hintergrund), sofort neu bestimmen
   if (diffMs <= 0) {
-    hintEl.textContent = "Ziel erreicht 🎉";
-    wrap.classList.add("finished");
-    renderCountdown(0, 0, 0, 0);
-    srStatusEl.textContent = "Ziel erreicht.";
-    return;
+    currentTarget = null;
+    ensureTarget(new Date());
+    diffMs = currentTarget.date.getTime() - Date.now();
   }
 
-  let diff = Math.floor(diffMs / 1000);
+  let diff = Math.max(0, Math.floor(diffMs / 1000));
 
   const sec = diff % 60; diff = Math.floor(diff / 60);
   const min = diff % 60; diff = Math.floor(diff / 60);
