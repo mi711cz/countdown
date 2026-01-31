@@ -209,3 +209,50 @@ function update() {
 }
 
 update();
+
+// ============ Background Crossfade ============
+
+const bgRoot = document.documentElement;
+
+// Beispiel: du kannst mehrere Bilder rotieren lassen
+const bgImages = [
+  "url('img/20251018_123814.jpg')", // dein Foto (Pfad anpassen!)
+  // "url('img/another.jpg')",
+];
+
+let bgIndex = 0;
+let showingA = true;
+
+// Initial setzen: A zeigt Bild 0, B ist leer
+bgRoot.style.setProperty("--bg-image-a", bgImages[0]);
+bgRoot.style.setProperty("--bg-image-b", "none");
+bgRoot.style.setProperty("--bg-a-opacity", "1");
+bgRoot.style.setProperty("--bg-b-opacity", "0");
+
+/**
+ * Crossfade auf das nächste Bild.
+ * Du kannst auch statt Bildern "none" setzen → dann blendest du zurück auf reines Dunkel.
+ */
+function crossfadeTo(nextImageCss /* z.B. "url('...')" oder "none" */) {
+  if (showingA) {
+    bgRoot.style.setProperty("--bg-image-b", nextImageCss);
+    bgRoot.style.setProperty("--bg-a-opacity", "0");
+    bgRoot.style.setProperty("--bg-b-opacity", "1");
+  } else {
+    bgRoot.style.setProperty("--bg-image-a", nextImageCss);
+    bgRoot.style.setProperty("--bg-a-opacity", "1");
+    bgRoot.style.setProperty("--bg-b-opacity", "0");
+  }
+  showingA = !showingA;
+}
+
+/** Beispiel: alle 10s wechseln */
+const BG_INTERVAL_MS = 10000;
+
+setInterval(() => {
+  bgIndex = (bgIndex + 1) % (bgImages.length + 1);
+
+  // +1 Slot = "dunkel" (kein Foto)
+  const next = (bgIndex === bgImages.length) ? "none" : bgImages[bgIndex];
+  crossfadeTo(next);
+}, BG_INTERVAL_MS);
