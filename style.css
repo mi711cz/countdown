@@ -275,5 +275,5 @@ body{
 
 /* Falls Nutzer reduzierte Animationen bevorzugt */
 @media (prefers-reduced-motion: reduce){
-  :root{ --bg-transition: 1ms; }
+  :root{ --bg-transition: 2ms; }
 }
