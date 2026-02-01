@@ -247,7 +247,7 @@ function crossfadeTo(nextImageCss /* z.B. "url('...')" oder "none" */) {
 }
 
 /** Beispiel: alle 10s wechseln */
-const BG_INTERVAL_MS = 3000;
+const BG_INTERVAL_MS = 2500;
 
 setInterval(() => {
   bgIndex = (bgIndex + 1) % (bgImages.length + 1);
