@@ -277,3 +277,33 @@ body{
 @media (prefers-reduced-motion: reduce){
   :root{ --bg-transition: 1ms; }
 }
+
+.bg-static{
+  position: fixed;
+  inset: 0;
+  z-index: -1;
+  pointer-events: none;
+  overflow: hidden;
+}
+
+/* Foto-Layer */
+.bg-static::before{
+  content:"";
+  position:absolute;
+  inset:0;
+  background: url("img/20251018_123814.jpg") center/cover no-repeat;
+  filter: brightness(0.85) contrast(1.05) saturate(1.0);
+  transform: scale(1.02); /* verhindert harte Kanten beim Rendern */
+}
+
+/* Dunkler Overlay-Layer */
+.bg-static::after{
+  content:"";
+  position:absolute;
+  inset:0;
+
+  /* Weiches, dunkles “Look & Feel” + Lesbarkeit */
+  background:
+    radial-gradient(ellipse at 50% 35%, rgba(0,0,0,0.20), rgba(0,0,0,0.85) 70%),
+    linear-gradient(to bottom, rgba(0,0,0,0.35), rgba(0,0,0,0.65));
+}
