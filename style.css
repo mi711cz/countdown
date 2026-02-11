@@ -31,6 +31,9 @@
   --card2:#0b122a;        /* Kartenhintergrund Variante 2 */
   --line:#1f2a55;         /* Trennlinien */
   --shadow: 0 12px 40px rgba(0,0,0,.35);  /* Schatten-Effekt */
+  
+  /* Animation-Parameter aus config.json */
+  --flip-duration: 260ms;  /* config.json → ui.animation.flipDurationMs */
 }
 
 *{ box-sizing:border-box; }
@@ -189,6 +192,7 @@ body{
   z-index:5;
   backface-visibility:hidden;
   transform-style:preserve-3d;
+  will-change:transform;  /* ✅ GPU-Beschleunigung */
 }
 
 .flip .animTop{
@@ -202,8 +206,8 @@ body{
   transform:rotateX(90deg);
 }
 
-.flip.flipping .animTop{ animation: flipTop 260ms ease-in forwards; }
-.flip.flipping .animBot{ animation: flipBot 260ms ease-out forwards; }
+.flip.flipping .animTop{ animation: flipTop var(--flip-duration) ease-in forwards; }
+.flip.flipping .animBot{ animation: flipBot var(--flip-duration) ease-out forwards; }
 
 @keyframes flipTop{
   from{ transform:rotateX(0deg); }

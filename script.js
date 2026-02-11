@@ -20,10 +20,29 @@
 // Zeitzone aus config.json → config.countdown.timezone
 const TIME_ZONE = "Europe/Berlin";
 
-const daysEl = document.getElementById("daysValue");
-const hintEl = document.getElementById("hint");
-const wrap = document.querySelector(".wrap");
-const srStatusEl = document.getElementById("srStatus");
+// ============ DOM Elements Initialization ============
+function initializeDOMElements() {
+  const elements = {
+    daysEl: document.getElementById("daysValue"),
+    hintEl: document.getElementById("hint"),
+    wrap: document.querySelector(".wrap"),
+    srStatusEl: document.getElementById("srStatus")
+  };
+  
+  const missing = Object.entries(elements)
+    .filter(([, el]) => !el)
+    .map(([name]) => name);
+  
+  if (missing.length > 0) {
+    console.error('❌ Fehlende DOM-Elemente:', missing);
+    throw new Error(`Countdown: Erforderliche Elemente nicht gefunden: ${missing.join(', ')}`);
+  }
+  
+  return elements;
+}
+
+const DOM = initializeDOMElements();
+const { daysEl, hintEl, wrap, srStatusEl } = DOM;
 
 // Flip-Karten initial aufbauen
 const flips = [...document.querySelectorAll(".flip")];
@@ -32,16 +51,28 @@ const flipByKey = new Map(flips.map(el => [el.dataset.key, el]));
 
 /** Liefert den Offset in Minuten des given timeZone zur gegebenen UTC-Zeit. */
 function tzOffsetMinutes(date, timeZone) {
-  // Beispiel timeZoneName: "GMT+1" / "GMT+2"
-  const dtf = new Intl.DateTimeFormat("en-US", { timeZone, timeZoneName: "shortOffset" });
-  const parts = dtf.formatToParts(date);
-  const tzName = parts.find(p => p.type === "timeZoneName")?.value || "GMT";
-  const m = tzName.match(/GMT([+-])(\d{1,2})(?::?(\d{2}))?/);
-  if (!m) return 0;
-  const sign = m[1] === "-" ? -1 : 1;
-  const hh = parseInt(m[2], 10);
-  const mm = m[3] ? parseInt(m[3], 10) : 0;
-  return sign * (hh * 60 + mm);
+  try {
+    const dtf = new Intl.DateTimeFormat("en-US", { timeZone, timeZoneName: "shortOffset" });
+    const parts = dtf.formatToParts(date);
+    const tzName = parts.find(p => p.type === "timeZoneName")?.value || "GMT";
+    
+    // Robuster Regex: GMT oder UTC Format
+    let m = tzName.match(/GMT([+-])(\d{1,2})(?::?(\d{2}))?/);
+    if (!m) m = tzName.match(/UTC([+-])(\d{1,2})(?::?(\d{2}))?/);
+    
+    if (!m) {
+      console.warn(`⚠️ Timezone-Offset nicht erkannt: "${tzName}", falle auf UTC zurück`);
+      return 0;
+    }
+    
+    const sign = m[1] === "-" ? -1 : 1;
+    const hh = parseInt(m[2], 10);
+    const mm = m[3] ? parseInt(m[3], 10) : 0;
+    return sign * (hh * 60 + mm);
+  } catch (error) {
+    console.error(`❌ Fehler bei tzOffsetMinutes: ${error.message}`);
+    return 0;
+  }
 }
 
 /**
@@ -95,7 +126,6 @@ function getZonedParts(date, timeZone) {
 }
 
 function pad2(n) { return String(n).padStart(2, "0"); }
-function pad3(n) { return String(n).padStart(3, "0"); } // (nicht genutzt, aber belassen)
 
 /** Nächstes Ziel (01.03. oder 31.10.) basierend auf dem aktuellen Zeitpunkt. */
 function computeTarget(now = new Date()) {
@@ -148,11 +178,23 @@ function setFlip(key, value) {
   el.classList.add("flipping");
 
   const cleanup = () => {
-    el.querySelector(".top .digit").textContent = value;
-    el.querySelector(".bot .digit").textContent = value;
-    el.classList.remove("flipping");
-    animTop.remove();
-    animBot.remove();
+    try {
+      const topDigit = el.querySelector(".top .digit");
+      const botDigit = el.querySelector(".bot .digit");
+      
+      if (topDigit && botDigit) {
+        topDigit.textContent = value;
+        botDigit.textContent = value;
+      } else {
+        console.warn(`⚠️ setFlip: Digit-Elemente nicht gefunden`);
+      }
+      
+      el.classList.remove("flipping");
+      animTop.remove();
+      animBot.remove();
+    } catch (error) {
+      console.error(`❌ setFlip cleanup error: ${error.message}`);
+    }
   };
 
   // Wichtig: auf animBot hören (damit cleanup nicht “zu früh” passiert)
@@ -180,45 +222,81 @@ function renderCountdown(days, hrs, min, sec) {
 }
 
 let currentTarget = null;
+let updateTimer = null;  // ✅ Für Memory-Leak-Fix
 
 function ensureTarget(now) {
   if (!currentTarget || now.getTime() >= currentTarget.date.getTime()) {
+    const wasTarget = currentTarget;
     currentTarget = computeTarget(now);
+    
     const targetDateEl = document.getElementById("targetDate");
     if (targetDateEl) targetDateEl.textContent = currentTarget.label;
     else hintEl.textContent = `Countdown ${currentTarget.label}`;
+    
+    // ✅ Screen-Reader informieren wenn Zieldatum wechselt
+    if (wasTarget && wasTarget.label !== currentTarget.label) {
+      srStatusEl.textContent = `Neues Zieldatum: ${currentTarget.label}`;
+      console.log(`📅 Zieldatum geändert: ${wasTarget.label} → ${currentTarget.label}`);
+    }
+    
     wrap.classList.remove("finished");
   }
 }
 
 function update() {
-  const now = new Date();
+  try {
+    const now = new Date();
 
-  // Ziel ggf. initialisieren / nach Erreichen weiterschalten
-  ensureTarget(now);
+    // Ziel ggf. initialisieren / nach Erreichen weiterschalten
+    ensureTarget(now);
 
-  let diffMs = currentTarget.date.getTime() - now.getTime();
+    let diffMs = currentTarget.date.getTime() - now.getTime();
 
-  // Falls wir exakt "drüber" sind (z.B. Tab war im Hintergrund), sofort neu bestimmen
-  if (diffMs <= 0) {
-    currentTarget = null;
-    ensureTarget(new Date());
-    diffMs = currentTarget.date.getTime() - Date.now();
+    // Falls wir exakt "drüber" sind (z.B. Tab war im Hintergrund), sofort neu bestimmen
+    if (diffMs <= 0) {
+      currentTarget = null;
+      ensureTarget(new Date());
+      diffMs = currentTarget.date.getTime() - Date.now();
+    }
+
+    let diff = Math.max(0, Math.floor(diffMs / 1000));
+
+    const sec = diff % 60; diff = Math.floor(diff / 60);
+    const min = diff % 60; diff = Math.floor(diff / 60);
+    const hrs = diff % 24;
+    const days = Math.floor(diff / 24);
+
+    renderCountdown(days, hrs, min, sec);
+
+    // Driftfrei: auf die nächste volle Sekunde ausrichten
+    const delay = 1000 - (Date.now() % 1000);
+    updateTimer = setTimeout(update, delay);  // ✅ Timer speichern für Cleanup
+  } catch (error) {
+    console.error(`❌ Fehler in update(): ${error.message}`);
   }
-
-  let diff = Math.max(0, Math.floor(diffMs / 1000));
-
-  const sec = diff % 60; diff = Math.floor(diff / 60);
-  const min = diff % 60; diff = Math.floor(diff / 60);
-  const hrs = diff % 24;
-  const days = Math.floor(diff / 24);
-
-  renderCountdown(days, hrs, min, sec);
-
-  // Driftfrei: auf die nächste volle Sekunde ausrichten
-  const delay = 1000 - (Date.now() % 1000);
-  setTimeout(update, delay);
 }
+
+// ✅ Memory-Leak-Fix: Cleanup-Funktion
+function stopCountdown() {
+  if (updateTimer) {
+    clearTimeout(updateTimer);
+    updateTimer = null;
+    console.log('⏸️ Countdown gestoppt');
+  }
+}
+
+// ✅ Cleanup bei Page-Unload
+window.addEventListener('beforeunload', stopCountdown);
+window.addEventListener('unload', stopCountdown);
+
+// ✅ Global Error Handler
+window.addEventListener('error', (event) => {
+  console.error('❌ Unerwarteter Fehler:', event.error);
+});
+
+window.addEventListener('unhandledrejection', (event) => {
+  console.error('❌ Unbehandelte Promise Rejection:', event.reason);
+});
 
 update();
 

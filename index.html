@@ -3,6 +3,11 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <meta name="description" content="Automatischer Countdown zu 01.03. und 31.10. mit eleganten Flip-Karten-Animationen" />
+  <meta name="theme-color" content="#070b18" />
+  <meta property="og:title" content="Countdown Webseite" />
+  <meta property="og:description" content="Countdown Timer mit automatischen Zieldaten" />
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='75' font-size='75'>⏳</text></svg>" />
   <title>Countdown</title>
   <link rel="stylesheet" href="style.css" />
 </head>
@@ -14,7 +19,7 @@
 
     <!-- Zeile 1: Tage -->
     <section class="row row-days" aria-label="Countdown Tage">
-      <div class="label">Days</div>
+      <div class="label">Tage</div>
       <div class="daysValue" id="daysValue">0</div>
     </section>
 
@@ -22,7 +27,7 @@
     <section class="row row-clock">
       <div class="clock" role="group" aria-label="Countdown Uhrzeit">
         <div class="unit">
-          <div class="unitLabel">Hours</div>
+          <div class="unitLabel">Stunden</div>
           <div class="cards" aria-hidden="true">
             <div class="flip" data-key="hh1"></div>
             <div class="flip" data-key="hh2"></div>
@@ -32,7 +37,7 @@
         <div class="sep" aria-hidden="true">:</div>
 
         <div class="unit">
-          <div class="unitLabel">Minutes</div>
+          <div class="unitLabel">Minuten</div>
           <div class="cards" aria-hidden="true">
             <div class="flip" data-key="mm1"></div>
             <div class="flip" data-key="mm2"></div>
@@ -42,7 +47,7 @@
         <div class="sep" aria-hidden="true">:</div>
 
         <div class="unit">
-          <div class="unitLabel">Seconds</div>
+          <div class="unitLabel">Sekunden</div>
           <div class="cards" aria-hidden="true">
             <div class="flip" data-key="ss1"></div>
             <div class="flip" data-key="ss2"></div>
