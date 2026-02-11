@@ -1,6 +1,6 @@
-# Countdown Webseite – Eleganter Ticker für Zieldaten
+# Countdown Webseite – Eleganter Ticker für automatische Zieldaten
 
-Eine interaktive Webseite mit einem visuellen Countdown zu automatisch berechneten Zieldaten (01. März und 31. Oktober). Das Projekt kombiniert moderne Web-Technologien für ein ansprechendes Benutzer­erlebnis.
+Eine interaktive Webseite mit einem visuellen Countdown zu automatisch berechneten Zieldaten (01.03. und 31.10.). Das Projekt kombiniert moderne Web-Technologien für ein ansprechendes Benutzer­erlebnis.
 
 ---
 
@@ -11,9 +11,11 @@ Das Projekt zeigt einen **Live-Countdown** mit folgenden Merkmalen:
 - **Automatische Zieldatum-Berechnung**: Ziel wechselt zwischen 01.03. und 31.10. je Jahreszeit
 - **Echtzeit-Display**: Tage, Stunden, Minuten und Sekunden in Echtzeit
 - **Flip-Karten-Animation**: Elegante Kartenflip-Animation beim Zeitwechsel
-- **Hintergrund-Crossfade**: Fotos mit sanftem Übergang und Overlay
+- **Hintergrund-Crossfade**: Fotos mit sanftem Übergang und Overlay (2700ms Intervall)
 - **Zeitzone-Handling**: Automatische Anpassung an Europe/Berlin (inklusive Sommerzeit)
 - **Barrierefreiheit**: Screen-Reader-Support mit ARIA-Labels und Text-Status-Updates
+
+**Version:** 1.0.0 | **Lizenz:** MIT
 
 ---
 
@@ -21,15 +23,41 @@ Das Projekt zeigt einen **Live-Countdown** mit folgenden Merkmalen:
 
 ```
 countdown/
-├── index.html                 # HTML-Struktur, Countdown-Elemente, ARIA-Labels
-├── script.js                  # Countdown-Logik, Zeitzone-Handling, Animationen
-├── style.css                  # Layout, Styling, Flip-Animation, Hintergrund-Management
+├── index.html                    # HTML-Struktur, Countdown-Elemente, ARIA-Labels
+├── script.js                     # Countdown-Logik, Zeitzone: Europe/Berlin
+├── style.css                     # Layout, Flip-Animation (500ms)
+├── config.json                   # Zentrale Konfiguration (MASTER-DATEI)
+├── scripts/
+│   ├── update-readme.js          # README-Generator (Synchronisation)
+│   └── validate-config.js        # Validierungsskript
 ├── img/
-│   └── 20251018_123814.jpg   # Hintergrundbild
-├── README.md                  # Deutsche Dokumentation
-├── README_EN.md               # Englische Dokumentation
-└── LICENSE                    # Lizenzinformationen
+│   └── img/20251018_123814.jpg
+├── README.md                     # Deutsche Dokumentation (AUTO-GENERIERT)
+├── README_EN.md                  # Englische Dokumentation
+└── LICENSE                       # MIT-Lizenz
 ```
+
+> **Wichtig:** Die `config.json` ist die **Master-Konfiguration**. Änderungen dort werden mit `npm run update-readme` in die README übertragen.
+
+---
+
+## 🎯 Countdown-Ziele
+
+Das Projekt zielt automatisch auf folgende Daten ab:
+
+| Zieldatum | Format |
+|-----------|--------|
+| **1. März** | 01.03. |
+| **31. Oktober** | 31.10. |
+
+**Logik:**
+```
+- Vor 01.03. → Ziel ist 01.03. (dieselbes Jahr)
+- Von 01.03. bis vor 31.10. → Ziel ist 31.10. (dieselbes Jahr)
+- Ab 31.10. → Ziel ist 01.03. (nächstes Jahr)
+```
+
+**Zeitzone:** Europe/Berlin
 
 ---
 
@@ -75,7 +103,7 @@ countdown/
 
 4. **Hintergrund-Crossfade (`crossfadeTo()`)**
    - CSS-Variablen für zwei Hintergrund-Layer (A und B)
-   - Wechsel alle 2700ms zwischen Bild und dunkler Variante
+   - Wechsel alle **2700ms** zwischen Bild und dunkler Variante
    - Layer-Rotation für nahtlose Übergänge
 
 **State-Management:**
@@ -89,46 +117,34 @@ countdown/
 
 **Farbschema (Dark Mode):**
 ```css
---bg: #070b18              /* Tiefes Dunkelblau */
---fg: #eaf0ff              /* Helles Weiß-Blau */
---muted: #aab6d6           /* Gedimmte Farbtöne */
---card: #0f1733 / #0b122a  /* Kartenhintergrund */
---line: #1f2a55            /* Trennlinien */
+:root {
+  --bg: #070b18              /* Bg */
+--fg: #eaf0ff              /* Fg */
+--muted: #aab6d6              /* Muted */
+--card: #0f1733              /* Card */
+--card2: #0b122a              /* Card2 */
+--line: #1f2a55              /* Line */
+--shadow: 0 12px 40px rgba(0,0,0,.35)
+}
 ```
 
 **Responsive Design:**
-- `clamp()` für fluid Typography: z.B. `clamp(46px, 8vw, 92px)` für Tages-Wert
+- `clamp()` für fluid Typography
 - Flex-Layout mit `gap` für flexibles Spacing
-- Mobile-first: `96vw` maximale Breite, Padding-Anpassungen
+- Mobile-first: `96vw` maximale Breite
+- Max-Width: `1100px`
 
 **Flip-Karten-Animation:**
 - Position-basiert: `position: relative` für Container
 - 3D-Effekt mit CSS `transform` und `perspective`
 - Zwei animierte Layer (`.animTop`, `.animBot`) für Flip-Effekt
-- Shadow-Effekt über `--shadow` Variable
+- Duration: **500ms**
 
 **Hintergrund-System:**
 - `.bg-static::before`: Bild-Layer (via CSS-Variablen)
 - `.bg-static::after`: Gradient-Overlay (Dunkelung + Vignette)
 - Top-Layer: Radiale Gradienten mit `rgba()` für Fokus-Effekt
 - Transition für 500ms Crossfade zwischen Bildern
-
----
-
-## 🎲 Zieldatum-Logik
-
-**Automatische Berechnung** basierend auf aktuellem Datum:
-
-| Zeitraum | Zieldatum |
-|----------|----------|
-| **1. Jan – 28. Feb** | 01.03. (dieselbes Jahr) |
-| **1. März – 30. Okt** | 31.10. (dieselbes Jahr) |
-| **31. Okt – 31. Dez** | 01.03. (nächstes Jahr) |
-
-**Implementierung in `computeTarget()`:**
-- Nutzt lokale Zeitzone Europe/Berlin für alle Vergleiche
-- Die Funktion wird bei jedem Update aufgerufen, um Übergänge zu erkennen
-- `ensureTarget()` aktualisiert die UI und setzt `wrap.classList` bei Zielreichung
 
 ---
 
@@ -160,56 +176,82 @@ http-server -p 8080
 http://localhost:8080
 ```
 
-> **Warum ein Server?** Einige Browser blockieren `file://`-Pfade bei modernen JavaScript-Features. Ein lokaler Server vermeidet diese Probleme.
-
 ---
 
-## ⚙️ Konfiguration & Anpassungen
+## ⚙️ Konfiguration & Änderungen
 
-### Hintergrundbild ändern
+> **WICHTIG:** Alle Konfigurationen erfolgen zentral in `config.json` !
 
-**In `script.js` die Array `bgImages` anpassen:**
-```javascript
-const bgImages = [
-  "url('img/DEIN_BILD.jpg')",
-  "url('img/ANDERES_BILD.jpg')",
-];
+### Zieldaten ändern
+
+**In `config.json`:**
+```json
+"countdown": {
+  "targets": [
+    { "month": 0, "day": 1, "label": "01. Januar", "displayFormat": "01.01." },
+    { "month": 5, "day": 30, "label": "30. Juni", "displayFormat": "30.06." }
+  ]
+}
 ```
 
-**Oder nur Bild in CSS aktualisieren** (für statische Version ohne Rotation):
-- In `style.css` → `.bg-static::before` den `background-image`-Wert ändern
-
-### Countdown-Termine ändern
-
-In `script.js`, Funktion `computeTarget()`:
-```javascript
-const march1 = makeZonedDate(year, 2, 1, 0, 0, 0, 0);  // 0=Jan, 2=März
-const oct31 = makeZonedDate(year, 9, 31, 0, 0, 0, 0);   // 9=Oktober
-```
-
-Beispiel für 01.01. und 30.06.:
-```javascript
-const jan1 = makeZonedDate(year, 0, 1, 0, 0, 0, 0);    // Monat 0 = Januar
-const jun30 = makeZonedDate(year, 5, 30, 0, 0, 0, 0);   // Monat 5 = Juni
+Dann README aktualisieren:
+```bash
+npm run update-readme
 ```
 
 ### Farbschema anpassen
 
-In `style.css` oben die CSS-Variablen im `:root`-Selektor ändern:
-```css
-:root {
-  --bg: #1a1a1a;           /* Hintergrund */
-  --fg: #ffffff;           /* Text */
-  --card: #333333;         /* Kartenhintergrund */
-  /* ... */
+**In `config.json`:**
+```json
+"ui": {
+  "colors": {
+    "bg": "#1a1a1a",
+    "fg": "#ffffff",
+    "card": "#333333"
+  }
 }
 ```
 
-### Hintergrund-Wechsel-Intervall ändern
+README aktualisieren:
+```bash
+npm run update-readme
+```
 
-In `script.js`:
-```javascript
-const BG_INTERVAL_MS = 2700;  // 2.7 Sekunden (ändern auf z.B. 5000 = 5 Sekunden)
+### Animation-Intervalle ändern
+
+**In `config.json`:**
+```json
+"ui": {
+  "animation": {
+    "bgIntervalMs": 5000,    // Hintergrund-Wechsel-Intervall
+    "flipDurationMs": 600    // Flip-Animation-Dauer
+  }
+}
+```
+
+---
+
+## 🔄 Automatische README-Synchronisation
+
+### Manuell aktualisieren:
+
+```bash
+npm run update-readme
+```
+
+### Im Git Pre-Commit Hook (optional):
+
+Erstelle `.git/hooks/pre-commit`:
+```bash
+#!/bin/bash
+npm run update-readme
+git add README.md
+```
+
+### Validierung:
+
+```bash
+npm run validate-config
 ```
 
 ---
@@ -218,11 +260,10 @@ const BG_INTERVAL_MS = 2700;  // 2.7 Sekunden (ändern auf z.B. 5000 = 5 Sekunde
 
 Das Projekt beachtet WCAG-Standards:
 
-- **ARIA-Labels** für Screen-Reader (`aria-label`, `aria-hidden`, `aria-live`)
-- **Text-Äquivalente** für Animationen (hidden `<p id="srStatus">`)
-- **Reduced Motion Support** (`prefers-reduced-motion: reduce`)
-- **Semantisches HTML** (Sektionen, Gruppen, Rollen)
-- **Farb­kontrast**: Helles Text auf dunklem Hintergrund
+- ARIA-Labels für Screen-Reader
+- aria-live für Live-Updates
+- Reduced Motion Support
+- Semantisches HTML
 
 **Test mit Screen-Reader:**
 - NVDA (Windows, kostenlos)
@@ -234,52 +275,29 @@ Das Projekt beachtet WCAG-Standards:
 ## 🔐 Sicherheit & Performance
 
 **Performance:**
-- Driftfreie Timer-Berechnung (keine `setInterval`-Drift)
-- Event-Delegation: Ein `animationend`-Listener pro Karte
-- Minimal DOM-Manipulationen (nur Wert-Updates)
-- CSS-Animationen statt JavaScript-Animationen (GPU-beschleunigt)
+- Driftfreie Timer-Berechnung
+- Minimal DOM-Manipulationen
+- CSS-Animationen (GPU-beschleunigt)
+- Event-Delegation
 
 **Sicherheit:**
-- Keine externen Abhängigkeiten (vanilla JavaScript)
-- Keine User-Input-Verarbeitung (keine Injection-Risiken)
-- Sichere Zeitberechnung (keine Client-abhängigen Daten)
-
----
-
-## 📄 Dateien-Übersicht
-
-| Datei | Größe (ca.) | Funktion |
-|-------|------------|----------|
-| `index.html` | 1.5 KB | Struktur, Semantik |
-| `script.js` | 9 KB | Countdown-Logik, Animationen |
-| `style.css` | ~300 Zeilen | Layout, Styling, Flip-Animation |
-| `img/20251018_123814.jpg` | ~1-3 MB | Hintergrundbild |
-| `README.md` | ~ | Deutsche Dokumentation |
-| `README_EN.md` | ~ | Englische Dokumentation |
+- Keine externen Abhängigkeiten
+- Vanilla JavaScript
+- Keine User-Input-Verarbeitung
 
 ---
 
 ## 📝 Lizenz
 
-Frei nutzbar und anpassbar. Siehe [LICENSE](LICENSE) für Details.
-
----
-
-## 🤝 Erweiterungsmöglichkeiten
-
-Ideen für Anpassungen:
-- **Verschiedene Countdown-Varianten**: Unterschiedliche Terminkombinationen
-- **Sound-Feedback**: Audio-Cue beim Zielenerreichen
-- **Lokalisierung**: Mehrsprachige Interface-Texte
-- **Mobile-Optimierung**: Touch-Gestures für Terminauswahl
-- **Statistik-Tracking**: Erfassung von Besucherzahlen
-- **Dark/Light-Mode Toggle**: Optional helles Design-Schema
+MIT-Lizenz. Frei nutzbar und anpassbar.
 
 ---
 
 ## 📞 Support & Weitere Infos
 
 Siehe auch:
+- [config.json](config.json) – Zentrale Konfiguration
 - [README_EN.md](README_EN.md) – English version
 - [LICENSE](LICENSE) – Lizenztext
-- HTML-Kommentare in den Sourcen für technische Details
+
+> **Hinweis:** Diese README wurde mit `scripts/update-readme.js` generiert. Änderungen direkt in dieser Datei gehen verloren!

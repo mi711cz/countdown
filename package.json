@@ -1,0 +1,24 @@
+{
+  "name": "countdown-webseite",
+  "version": "1.0.0",
+  "description": "Eleganter Ticker für automatische Zieldaten (01.03. / 31.10.)",
+  "main": "index.html",
+  "scripts": {
+    "update-readme": "node scripts/update-readme.js && echo '\n📚 README.md wurde von config.json aktualisiert'",
+    "validate": "node scripts/validate-config.js",
+    "check": "npm run validate && npm run update-readme"
+  },
+  "keywords": [
+    "countdown",
+    "timer",
+    "animation",
+    "html5",
+    "css3",
+    "javascript"
+  ],
+  "author": "mi711cz",
+  "license": "MIT",
+  "engines": {
+    "node": ">=12.0.0"
+  }
+}

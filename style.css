@@ -1,11 +1,36 @@
+/* ========================================
+   COUNTDOWN WEBSEITE – STYLING
+   ======================================== 
+   
+   ⚠️  WICHTIG: Farbschema in config.json definieren!
+   
+   CSS-Variablen bekommen ihre Werte aus:
+   - config.json → ui.colors
+   
+   ÄNDERUNGEN:
+   1. config.json bearbeiten (ui.colors)
+   2. npm run update-readme
+   3. Diese Datei wird NICHT automatisch aktualisiert
+      → Farben manuell hier anpassen oder via CSS-Variablen in index.html überschreiben
+   
+   Animation-Parameter:
+   - bgIntervalMs: config.json → ui.animation.bgIntervalMs (aktuell: 2700ms)
+   - flipDurationMs: config.json → ui.animation.flipDurationMs (aktuell: 500ms)
+   
+   Responsive-Werte:
+   - Max-Width: config.json → ui.responsive.maxWidth (aktuell: 1100px)
+   - Viewport: config.json → ui.responsive.viewportWidth (aktuell: 96vw)
+   ======================================== */
+
 :root{
-  --bg:#070b18;
-  --fg:#eaf0ff;
-  --muted:#aab6d6;
-  --card:#0f1733;
-  --card2:#0b122a;
-  --line:#1f2a55;
-  --shadow: 0 12px 40px rgba(0,0,0,.35);
+  /* Farbschema aus config.json → ui.colors */
+  --bg:#070b18;           /* Hintergrund */
+  --fg:#eaf0ff;           /* Vordergrund/Text */
+  --muted:#aab6d6;        /* Gedimmte Farbtöne */
+  --card:#0f1733;         /* Kartenhintergrund */
+  --card2:#0b122a;        /* Kartenhintergrund Variante 2 */
+  --line:#1f2a55;         /* Trennlinien */
+  --shadow: 0 12px 40px rgba(0,0,0,.35);  /* Schatten-Effekt */
 }
 
 *{ box-sizing:border-box; }

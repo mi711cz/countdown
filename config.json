@@ -1,0 +1,70 @@
+{
+  "project": {
+    "name": "Countdown Webseite",
+    "description": "Eleganter Ticker für automatische Zieldaten",
+    "version": "1.0.0",
+    "author": "mi711cz",
+    "license": "MIT"
+  },
+  "countdown": {
+    "targets": [
+      {
+        "month": 2,
+        "day": 1,
+        "label": "01. März",
+        "displayFormat": "01.03."
+      },
+      {
+        "month": 9,
+        "day": 31,
+        "label": "31. Oktober",
+        "displayFormat": "31.10."
+      }
+    ],
+    "timezone": "Europe/Berlin"
+  },
+  "ui": {
+    "colors": {
+      "bg": "#070b18",
+      "fg": "#eaf0ff",
+      "muted": "#aab6d6",
+      "card": "#0f1733",
+      "card2": "#0b122a",
+      "line": "#1f2a55",
+      "shadow": "0 12px 40px rgba(0,0,0,.35)"
+    },
+    "animation": {
+      "bgIntervalMs": 2700,
+      "flipDurationMs": 500
+    },
+    "responsive": {
+      "maxWidth": "1100px",
+      "viewportWidth": "96vw"
+    }
+  },
+  "files": {
+    "images": {
+      "background": "img/20251018_123814.jpg",
+      "size": "~1-3 MB"
+    }
+  },
+  "features": {
+    "accessibility": [
+      "ARIA-Labels für Screen-Reader",
+      "aria-live für Live-Updates",
+      "Reduced Motion Support",
+      "Semantisches HTML"
+    ],
+    "performance": [
+      "Driftfreie Timer-Berechnung",
+      "Minimal DOM-Manipulationen",
+      "CSS-Animationen (GPU-beschleunigt)",
+      "Event-Delegation"
+    ],
+    "security": [
+      "Keine externen Abhängigkeiten",
+      "Vanilla JavaScript",
+      "Keine User-Input-Verarbeitung"
+    ]
+  }
+}

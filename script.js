@@ -1,11 +1,23 @@
-// Countdown-Ziel wechselt automatisch zwischen:
-// - 01. März 00:00:00 (Europe/Berlin)
-// - 31. Oktober 00:00:00 (Europe/Berlin)
-// Jahr für Jahr ohne manuelle Anpassung.
-//
-// Hinweis: Wir verwenden Intl.DateTimeFormat, um den UTC-Offset für Europe/Berlin
-// zum jeweiligen Datum zu ermitteln (wichtig für Sommerzeit-Umstellungen).
+/**
+ * COUNTDOWN WEBSEITE
+ * ==================
+ * 
+ * ⚠️  WICHTIG: Alle Konfigurationen erfolgen in config.json !
+ * 
+ * Countdown-Ziele werden AUTOMATISCH zwischen folgenden Daten umgeschaltet:
+ * - config.json → countdown.targets[0] (z.B. 01. März 00:00:00 Europe/Berlin)
+ * - config.json → countdown.targets[1] (z.B. 31. Oktober 00:00:00 Europe/Berlin)
+ * 
+ * ÄNDERUNGEN:
+ * 1. config.json bearbeiten (targets, timezone)
+ * 2. npm run update-readme (README wird aktualisiert)
+ * 3. Seite neu laden
+ * 
+ * Zusätzliche Info: Intl.DateTimeFormat wird verwendet, um UTC-Offset für die
+ * Zeitzone korrekt zu ermitteln (wichtig für Sommerzeit-Umstellungen).
+ */
 
+// Zeitzone aus config.json → config.countdown.timezone
 const TIME_ZONE = "Europe/Berlin";
 
 const daysEl = document.getElementById("daysValue");
